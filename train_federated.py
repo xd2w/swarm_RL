@@ -1,3 +1,5 @@
+import os
+import shutil
 import time
 import argparse
 
@@ -36,10 +38,25 @@ class Server:
         return self.actor.state_dict()
 
 
-def main(config, run_id, no_graphics=True, indivisual_rewards=True):
+def main(args):
+    config_file = args.config
+    run_id = args.run_id
+    force = args.force
+    no_graphics = args.no_graphics
+    indivisual_rewards = args.indivisual_rewards
 
     with open(config, "r") as f:
         config = yaml.safe_load(f)
+
+    save_freq = config["checkpoint"]["save_freq"]
+
+    run_dir = f"runs/{run_id}"
+    if os.path.exists(run_dir):
+        if force:
+            shutil.rmtree(run_dir)
+        else:
+            print("\nRun already exists, do --force to overwrite\n")
+            exit()
 
     epochs = config["hyperparameters"]["epochs"]
     lr_actor = config["hyperparameters"]["lr_actor"]
@@ -66,75 +83,84 @@ def main(config, run_id, no_graphics=True, indivisual_rewards=True):
 
     # agent = DDPGAgent(state_dim, action_dim, max_action, log_dir=f"runs/{run_id}/"
     server = Server(
-        SACAgent(state_dim, action_dim, max_action, log_dir=f"runs/{run_id}/"),
+        SACAgent(state_dim, action_dim, max_action, log_dir=f"runs/{run_id}/logs"),
     )
 
     for k in range(env.n_agents):
         agents.append(
-            SACAgent(state_dim, action_dim, max_action, log_dir=f"runs/{run_id}/{k}/")
+            SACAgent(
+                state_dim, action_dim, max_action, log_dir=f"runs/{run_id}/{k}/logs"
+            )
         )
 
     server.distribute_model(agents)
 
-    ave_episodes = 5
-    reward_history = []
-    start = time.time()
+    try:
+        ave_episodes = 5
+        reward_history = []
+        start = time.time()
 
-    for episode in range(epochs):
-        states = env.reset()
-        episode_reward = 0
-        rewards_hist = np.zeros(200)
-        done = [False] * env.n_agents
-        actions = np.zeros((env.n_agents, 2))
-        step = 0
+        for episode in range(epochs):
+            states = env.reset()
+            episode_reward = 0
+            rewards_hist = np.zeros(200)
+            done = [False] * env.n_agents
+            actions = np.zeros((env.n_agents, 2))
+            step = 0
 
-        if episode % ave_episodes == 0:
-            server.average_models(agents)
-            server.distribute_model(agents)
-            print("model avegeraged")
+            if episode % ave_episodes == 0:
+                server.average_models(agents)
+                server.distribute_model(agents)
+                print("model avegeraged")
 
-        while not any(done):
-            # 200 steps
-            for k in range(env.n_agents):
-                actions[k] = agents[k].select_action(states[k])
-            next_states, reward, done = env.step(actions)
-            for k in range(env.n_agents):
-                agents[k].remember(
-                    states[k], actions[k], reward[k], next_states[k], done[k]
-                )
-                agents[k].train()
-            states = next_states
-            episode_reward += reward
-            rewards_hist[step] = np.sum(reward)
-            step += 1
+            while not any(done):
+                # 200 steps
+                for k in range(env.n_agents):
+                    actions[k] = agents[k].select_action(states[k])
+                next_states, reward, done = env.step(actions)
+                for k in range(env.n_agents):
+                    agents[k].remember(
+                        states[k], actions[k], reward[k], next_states[k], done[k]
+                    )
+                    agents[k].train()
+                states = next_states
+                episode_reward += reward
+                rewards_hist[step] = np.sum(reward)
+                step += 1
 
-        # print(step)
-        reward_history.append(episode_reward)
-        agents[0].writer.add_scalar(
-            "Reward/Episode",
-            np.sum(episode_reward) / env.n_agents,
-            episode,
-            time.time(),
-        )
-        agents[0].writer.add_histogram(
-            "Reward", rewards_hist, episode, walltime=time.time()
-        )
-        # if indivisual_rewards:
-        #     agent.writer.add_scalars(
-        #         "Inidividual Reward ",
-        #         {str(k): reward[k] for k in range(env.n_agents)},
-        #         episode,
-        #         time.time(),
-        #     )
-        print(
-            f"{episode} epoch: {(time.time() - start):.0f}s"
-            f": Reward = {np.sum(episode_reward) / env.n_agents:.2f}, variance = {np.var(episode_reward):.2f}"
-        )
+            # print(step)
+            reward_history.append(episode_reward)
+            agents[0].writer.add_scalar(
+                "Reward/Episode",
+                np.sum(episode_reward) / env.n_agents,
+                episode,
+                time.time(),
+            )
+            agents[0].writer.add_histogram(
+                "Reward", rewards_hist, episode, walltime=time.time()
+            )
+            # if indivisual_rewards:
+            #     agent.writer.add_scalars(
+            #         "Inidividual Reward ",
+            #         {str(k): reward[k] for k in range(env.n_agents)},
+            #         episode,
+            #         time.time(),
+            #     )
+            print(
+                f"{episode} epoch: {(time.time() - start):.0f}s"
+                f": Reward = {np.sum(episode_reward) / env.n_agents:.2f}, variance = {np.var(episode_reward):.2f}"
+            )
 
-    server.average_models(agents)
-    server.actor.save(f"./{run_id}")
+        server.average_models(agents)
+        server.actor.save(f"./{run_id}/model")
+        env.close()
 
-    env.close()
+    except KeyboardInterrupt:
+        print("""\n\nTraining stopped by user: terminating and saving model.""")
+        for k in range(env.n_agents):
+            agents[k].save(f"./runs/{run_id}/models/{run_id}_{episode*200}_{k}")
+        server.actor.save(f"./runs/{run_id}/models/{run_id}_{episode*200}")
+        env.close()
 
 
 if __name__ == "__main__":
@@ -144,6 +170,7 @@ if __name__ == "__main__":
     parser.add_argument("--run-id", type=str, default="run01")
     parser.add_argument("--no-graphics", action="store_true", default=False)
     parser.add_argument("--indivisual-rewards", action="store_true", default=False)
+    parser.add_argument("--force", "-f", action="store_true", default=False)
     args = parser.parse_args()
 
-    main(args.config, args.run_id, args.no_graphics, args.indivisual_rewards)
+    main(args)

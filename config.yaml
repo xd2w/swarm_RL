@@ -1,6 +1,6 @@
 hyperparameters:
   model: "DDPG"
-  epochs: 20
+  epochs: 2000
   lr_actor: 1e-4
   lr_critic: 1e-3
   gamma: 0.99
@@ -16,7 +16,7 @@ memory:
   batch_size: 64
 
 checkpoint:
-  save_freq: 5
+  save_freq: 200
   save_only_best: true
 
 
