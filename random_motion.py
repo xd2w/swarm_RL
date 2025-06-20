@@ -54,7 +54,7 @@ def LLM_Main():
 
 def Unity_main():
     env = UnityEnvironment(
-        file_name="../../../../../Maze gen/Builds/Maze_small_seed.app"
+        file_name="../../../../../Maze gen/Builds/Maze_small_pos.app"
     )
     env.reset()
     behaviour_names = env.behavior_specs.keys()
@@ -63,33 +63,34 @@ def Unity_main():
     print(spec)
     num_continuous_actions = spec.action_spec.continuous_size
 
-    for _ in range(20000):
-        decision_steps, terminal_steps = env.get_steps(behaviour_name)
+    for episode in range(100):
+        total_rewards = np.zeros_like
+        for step in range(200):
+            decision_steps, terminal_steps = env.get_steps(behaviour_name)
 
-        # print()
-        # print(len(decision_steps))
-
-        num_agents = len(decision_steps.agent_id)
-
-        if num_agents > 0:
-            action = np.random.randn(num_agents, num_continuous_actions)
-            obs = decision_steps.obs
-            rewards = decision_steps.reward
-            # print("observations")
-            # print(obs[0])
             # print()
-            # print(obs[1])
-            # print()
+            # print(len(decision_steps))
 
-            # print("rewards")
-            # print(rewards)
-            # print()
+            num_agents = len(decision_steps.agent_id)
 
-            # break
-            action_tuple = ActionTuple(continuous=action)
-            env.set_actions(behaviour_name, action_tuple)
+            if num_agents > 0:
+                action = np.random.randn(num_agents, num_continuous_actions)
+                obs = decision_steps.obs
+                rewards = decision_steps.reward
+                # print("observations")
+                # print(obs[0])
+                # print()
+                # print(obs[1])
+                # print()
 
-        env.step()
+                # print("rewards")
+                # print(rewards)
+                # print()
+
+                # break
+                action_tuple = ActionTuple(continuous=action)
+                env.set_actions(behaviour_name, action_tuple)
+            env.step()
 
     env.close()
 

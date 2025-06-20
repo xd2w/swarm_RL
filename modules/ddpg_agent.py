@@ -12,7 +12,17 @@ from modules.actor_acitic import Actor, Critic, ReplayBuffer
 
 
 class DDPGAgent:
-    def __init__(self, state_dim, action_dim, hyperparam, log_dir="runs/DDPG"):
+    def __init__(self, state_dim, action_dim, config, log_dir="runs/DDPG"):
+
+        hyperparam = config["hyperparameters"]
+        mem_param = config["memory"]
+
+        self.gamma = hyperparam["gamma"]
+        self.tau = hyperparam["tau"]
+        self.batch_size = mem_param["batch_size"]
+        self.replay_buffer_size = mem_param["buffer_size"]
+        self.noise = hyperparam["noise"]
+
         self.actor = Actor(state_dim, action_dim)
         self.actor_target = Actor(state_dim, action_dim)
         self.actor_target.load_state_dict(self.actor.state_dict())
@@ -24,18 +34,18 @@ class DDPGAgent:
         self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=1e-3)
 
         self.max_action = 1
-        self.replay_buffer = ReplayBuffer()
+        self.replay_buffer = ReplayBuffer(self.replay_buffer_size)
         self.gamma = 0.99
-        self.tau = 0.005
+        self.tau = 0.01
         self.batch_size = 64
-        self.noise = hyperparam["noise"]  # 0.1
+        self.noise = 0.1
 
         self.writer = SummaryWriter(log_dir)
         self.total_steps = 0
 
     def select_action(self, state):
-        state = torch.FloatTensor(state)
-        action = self.actor(state).detach().cpu().numpy()
+        state = torch.FloatTensor(state.reshape(1, -1))
+        action = self.actor(state).detach().cpu().numpy()[0]
         action += np.random.normal(0, self.noise, size=action.shape)
         return action.clip(-self.max_action, self.max_action)
 
@@ -96,5 +106,5 @@ class DDPGAgent:
     def state_dict(self):
         return self.actor.state_dict()
 
-    def __del__(self):
-        self.writer.close()
+    # def __del__(self):
+    #     self.writer.close()

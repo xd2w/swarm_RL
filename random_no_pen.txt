@@ -1,0 +1,109 @@
+66.0, 94.0, 63.0, 52.0, 82.0, 80.0, 53.0, 50.0, 83.0, 60.0, 82.0, 81.0, 81.0, 73.0, 70.0, 66.0, 60.0, 66.0, 65.0, 82.0, 87.0, 71.0, 82.0, 68.0, 58.0, 55.0, 69.0, 88.0, 80.0, 95.0, 87.0, 73.0, 79.0, 75.0, 55.0, 85.0, 81.0, 84.0, 84.0, 74.0, 70.0, 74.0, 78.0, 87.0, 82.0, 81.0, 80.0, 75.0, 53.0, 73.0, 92.0, 67.0, 66.0, 55.0, 77.0, 68.0, 61.0, 68.0, 72.0, 68.0, 84.0, 59.0, 78.0, 52.0, 70.0, 57.0, 65.0, 83.0, 67.0, 90.0, 59.0, 93.0, 87.0, 82.0, 70.0, 85.0, 61.0, 51.0, 75.0, 64.0, 69.0, 89.0, 56.0, 82.0, 51.0, 83.0, 49.0, 63.0, 69.0, 86.0, 72.0, 65.0, 72.0, 78.0, 76.0, 84.0, 73.0, 72.0, 69.0
+
+7176.0
+
+
+[1620. 1495. 1311. 1446. 1304.]
+
+
+
+
+1       ep:     3s:     Reward = 13.20  variance = 58.16
+2       ep:     6s:     Reward = 18.80  variance = 14.96
+3       ep:     9s:     Reward = 12.60  variance = 12.64
+4       ep:     12s:    Reward = 10.40  variance = 49.84
+5       ep:     15s:    Reward = 16.40  variance = 11.84
+6       ep:     17s:    Reward = 16.00  variance = 18.80
+7       ep:     20s:    Reward = 10.60  variance = 13.04
+8       ep:     23s:    Reward = 10.00  variance = 59.20
+9       ep:     26s:    Reward = 16.60  variance = 7.04
+10      ep:     29s:    Reward = 12.00  variance = 49.60
+11      ep:     31s:    Reward = 16.40  variance = 31.84
+12      ep:     34s:    Reward = 16.20  variance = 58.16
+13      ep:     37s:    Reward = 16.20  variance = 34.16
+14      ep:     40s:    Reward = 14.60  variance = 35.04
+15      ep:     42s:    Reward = 14.00  variance = 6.80
+16      ep:     45s:    Reward = 13.20  variance = 18.16
+17      ep:     48s:    Reward = 12.00  variance = 44.80
+18      ep:     51s:    Reward = 13.20  variance = 10.96
+19      ep:     53s:    Reward = 13.00  variance = 33.20
+20      ep:     56s:    Reward = 16.40  variance = 38.24
+21      ep:     59s:    Reward = 17.40  variance = 80.64
+22      ep:     61s:    Reward = 14.20  variance = 62.16
+23      ep:     64s:    Reward = 16.40  variance = 4.24
+24      ep:     67s:    Reward = 13.60  variance = 9.04
+25      ep:     70s:    Reward = 11.60  variance = 18.64
+26      ep:     73s:    Reward = 11.00  variance = 31.20
+27      ep:     76s:    Reward = 13.80  variance = 12.16
+28      ep:     79s:    Reward = 17.60  variance = 63.04
+29      ep:     82s:    Reward = 16.00  variance = 36.40
+30      ep:     84s:    Reward = 19.00  variance = 47.20
+31      ep:     87s:    Reward = 17.40  variance = 47.04
+32      ep:     90s:    Reward = 14.60  variance = 51.44
+33      ep:     93s:    Reward = 15.80  variance = 42.56
+34      ep:     95s:    Reward = 15.00  variance = 12.80
+35      ep:     98s:    Reward = 11.00  variance = 33.20
+36      ep:     101s:   Reward = 17.00  variance = 91.60
+37      ep:     104s:   Reward = 16.20  variance = 26.96
+38      ep:     107s:   Reward = 16.80  variance = 103.36
+39      ep:     109s:   Reward = 16.80  variance = 61.76
+40      ep:     112s:   Reward = 14.80  variance = 14.56
+41      ep:     115s:   Reward = 14.00  variance = 62.40
+42      ep:     118s:   Reward = 14.80  variance = 20.16
+43      ep:     120s:   Reward = 15.60  variance = 36.64
+44      ep:     123s:   Reward = 17.40  variance = 5.04
+45      ep:     126s:   Reward = 16.40  variance = 75.44
+46      ep:     129s:   Reward = 16.20  variance = 14.16
+47      ep:     132s:   Reward = 16.00  variance = 42.00
+48      ep:     135s:   Reward = 15.00  variance = 152.00
+49      ep:     138s:   Reward = 10.60  variance = 29.04
+50      ep:     141s:   Reward = 14.60  variance = 10.64
+51      ep:     145s:   Reward = 18.40  variance = 9.04
+52      ep:     148s:   Reward = 13.40  variance = 36.64
+53      ep:     151s:   Reward = 13.20  variance = 48.96
+54      ep:     154s:   Reward = 11.00  variance = 17.60
+55      ep:     158s:   Reward = 15.40  variance = 30.24
+56      ep:     161s:   Reward = 13.60  variance = 67.44
+57      ep:     164s:   Reward = 12.20  variance = 62.96
+58      ep:     167s:   Reward = 13.60  variance = 85.04
+59      ep:     171s:   Reward = 14.40  variance = 73.04
+60      ep:     174s:   Reward = 13.60  variance = 45.04
+61      ep:     177s:   Reward = 16.80  variance = 64.16
+62      ep:     180s:   Reward = 11.80  variance = 8.96
+63      ep:     183s:   Reward = 15.60  variance = 20.64
+64      ep:     186s:   Reward = 10.40  variance = 53.84
+65      ep:     189s:   Reward = 14.00  variance = 54.40
+66      ep:     192s:   Reward = 11.40  variance = 40.64
+67      ep:     195s:   Reward = 13.00  variance = 50.00
+68      ep:     198s:   Reward = 16.60  variance = 123.44
+69      ep:     200s:   Reward = 13.40  variance = 56.64
+70      ep:     203s:   Reward = 18.00  variance = 52.80
+71      ep:     206s:   Reward = 11.80  variance = 43.76
+72      ep:     209s:   Reward = 18.60  variance = 64.24
+73      ep:     212s:   Reward = 17.40  variance = 5.04
+74      ep:     215s:   Reward = 16.40  variance = 53.44
+75      ep:     218s:   Reward = 14.00  variance = 54.00
+76      ep:     221s:   Reward = 17.00  variance = 31.60
+77      ep:     224s:   Reward = 12.20  variance = 29.36
+78      ep:     227s:   Reward = 10.20  variance = 52.56
+79      ep:     231s:   Reward = 15.00  variance = 72.40
+80      ep:     233s:   Reward = 12.80  variance = 23.76
+81      ep:     236s:   Reward = 13.80  variance = 56.56
+82      ep:     239s:   Reward = 17.80  variance = 75.76
+83      ep:     242s:   Reward = 11.20  variance = 46.16
+84      ep:     245s:   Reward = 16.40  variance = 6.64
+85      ep:     248s:   Reward = 10.20  variance = 98.56
+86      ep:     251s:   Reward = 16.60  variance = 18.64
+87      ep:     254s:   Reward = 9.80   variance = 24.56
+88      ep:     257s:   Reward = 12.60  variance = 20.24
+89      ep:     260s:   Reward = 13.80  variance = 175.76
+90      ep:     263s:   Reward = 17.20  variance = 13.36
+91      ep:     266s:   Reward = 14.40  variance = 42.64
+92      ep:     269s:   Reward = 13.00  variance = 71.20
+93      ep:     272s:   Reward = 14.40  variance = 3.04
+94      ep:     275s:   Reward = 15.60  variance = 63.44
+95      ep:     277s:   Reward = 15.20  variance = 45.36
+96      ep:     281s:   Reward = 16.80  variance = 78.16
+97      ep:     284s:   Reward = 14.60  variance = 35.44
+98      ep:     286s:   Reward = 14.40  variance = 37.84
+99      ep:     289s:   Reward = 13.80  variance = 32.96

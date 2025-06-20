@@ -66,30 +66,39 @@ class Critic(nn.Module):
 
 
 class SACAgent:
-    def __init__(self, state_dim, action_dim, hyperparam, log_dir="runs/SAC"):
+    def __init__(self, state_dim, action_dim, config, log_dir="runs/SAC"):
         max_action = 1
-        self.actor = Actor(state_dim, action_dim, max_action)
+        self.actor = Actor(state_dim, action_dim, 1)
         self.critic = Critic(state_dim, action_dim)
         self.critic_target = Critic(state_dim, action_dim)
         self.critic_target.load_state_dict(self.critic.state_dict())
 
-        self.max_action = max_action
-        self.replay_buffer = ReplayBuffer()
+        hyperparam = config["hyperparameters"]
+        mem_param = config["memory"]
 
-        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=3e-4)
-        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=3e-4)
+        self.max_action = 1
+        self.replay_buffer = ReplayBuffer(max_size=mem_param["buffer_size"])
 
-        self.gamma = 0.99
-        self.tau = 0.005
-        self.batch_size = 64
-        self.alpha = 0.2
+        lr = hyperparam["lr"]
+
+        self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=lr)
+        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=lr)
+
+        # self.gamma = 0.99
+        # self.tau = 0.995
+        # self.batch_size = 64
+        # self.alpha = 1  # init alpha
+
+        self.gamma = hyperparam["gamma"]
+        self.tau = hyperparam["tau"]
+        self.alpha = hyperparam["alpha"]
+
+        self.batch_size = mem_param["batch_size"]
 
         # Automatic entropy tuning
         self.target_entropy = -action_dim
         self.log_alpha = torch.tensor(np.log(self.alpha), requires_grad=True)
-        self.alpha_optimizer = optim.Adam([self.log_alpha], lr=3e-4)
-
-        from torch.utils.tensorboard import SummaryWriter
+        self.alpha_optimizer = optim.Adam([self.log_alpha], lr=lr)
 
         self.writer = SummaryWriter(log_dir)
         self.total_steps = 0
@@ -98,10 +107,10 @@ class SACAgent:
         self.replay_buffer.add(*args)
 
     def select_action(self, state, eval=False):
-        state = torch.FloatTensor(state)
+        state = torch.FloatTensor(state.reshape(1, -1))
         if eval:
             mean, _ = self.actor(state)
-            return torch.tanh(mean).detach().cpu().numpy()
+            return torch.tanh(mean).detach().cpu().numpy()[0]
         else:
             action, _ = self.actor.sample(state)
             return action.detach().cpu().numpy()
@@ -173,5 +182,5 @@ class SACAgent:
     def load_state_dict(self, state_dict):
         self.actor.load_state_dict(state_dict)
 
-    def __del__(self):
-        self.writer.close()
+    # def __del__(self):
+    #     self.writer.close()
